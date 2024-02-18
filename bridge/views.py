@@ -3,11 +3,13 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, get_user_model, authenticate
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
+from .models import Event
 
 # Create your views here.
 
 def home(request):
-    return render(request, 'home.html')
+    events = Event.objects.all()
+    return render(request, 'home.html', {'events': events})
 
 def login(request):
     if request.method == "POST":
@@ -57,14 +59,11 @@ def logout_view(request):
 def faq(request):
     return render(request, 'faq.html')
 
-def image(request):
-    return render(request, 'image.html')
+def navigation(request):
+    return render(request, 'navigation.html')
 
 def urban_commuter(request):
     return render(request, 'urban_commuter.html')
-
-def city_Navigation(request):
-    return render(request, 'city_Navigation.html')
 
 def local_community_engagement(request):
     return render(request, 'local_community_engagement.html')

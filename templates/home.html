@@ -2,27 +2,37 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
-<div class="container h-100">
-    <div class="row h-100 justify-content-center align-items-center">
-        <div class="card-body">
-            <h5 class="card-title text-center">Events</h5>
-            
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h5 class="text-center">Events</h5>
             <hr>
-            
-            
+            {% for event in events %}
+            <div class="card mb-3" style="cursor: pointer;">
+                <div class="card-header" onclick="toggleAdditionalInfo('info{{ forloop.counter }}')">
+                    {{ event.name }} - {{ event.date }} at {{ event.time }}
+                </div>
+                <div class="card-body" id="info{{ forloop.counter }}" style="display: none;">
+                    <h5 class="card-title">{{ event.location }}</h5>
+                    <p class="card-text">{{ event.additional_info }}</p>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>
 
 <script>
-    // Display the message for 5 seconds and then hide it
-    setTimeout(function() {
-        var message = document.getElementById('message');
-        if (message) {
-            message.style.display = 'none';
-        }
-    }, 5000);
+function toggleAdditionalInfo(id) {
+    var info = document.getElementById(id);
+    if (info.style.display === "none") {
+        info.style.display = "block";
+    } else {
+        info.style.display = "none";
+    }
+}
 </script>
+
 <style>
     .error-message {
         color: red;

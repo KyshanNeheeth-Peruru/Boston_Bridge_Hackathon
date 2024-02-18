@@ -21,16 +21,16 @@ from bridge import views as bridge_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', bridge_views.home, name='home'),
+    path('home', bridge_views.home, name='home'),
     path('login/', bridge_views.login, name='login'),
     path('logout/', bridge_views.logout_view, name='logout'),
     path('register/', bridge_views.register, name='register'),
     path('forgot_password/', bridge_views.forgot_password, name='forgot_password'),
     path('faq/', bridge_views.faq, name='faq'),
     
-    path('image/', bridge_views.image, name='image'),
+    path('navigation/', bridge_views.navigation, name='navigation'),
     
     path('urban_commuter/', bridge_views.urban_commuter, name='urban_commuter'),
-    path('city_Navigation/', bridge_views.city_Navigation, name='city_Navigation'),
     path('local_community_engagement/', bridge_views.local_community_engagement, name='local_community_engagement'),
     path('student_housing/', bridge_views.student_housing, name='student_housing'),
     path('job_finder/', bridge_views.job_finder, name='job_finder'),
