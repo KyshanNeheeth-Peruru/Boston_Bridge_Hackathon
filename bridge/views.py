@@ -9,6 +9,16 @@ import csv
 from django import forms
 from io import TextIOWrapper
 from django.http import HttpResponse
+from django.conf import settings
+import googlemaps
+import joblib
+import os
+from sklearn.preprocessing import LabelEncoder
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
 
 # Create your views here.
 
@@ -120,7 +130,7 @@ def rental_check(request):
     return render(request, 'rental_check.html', {'violations': violations})
 
 def nearby_events(request):
-    places = []  # Initialize places as an empty list
+    places = []
     if request.method == 'POST':
         api_key = 'AIzaSyDSRumQMKR9GclqYS9AlfwlTRd1pUpcWRk'
         keyword = request.POST.get('activity', '')
@@ -157,6 +167,35 @@ def find_places_nearby(api_key, location, radius, keyword=None, type=None):
     response = requests.get(base_url, params=params)
     results = response.json()["results"]
     return results
+
+def rent_predict(request):
+    gmaps = googlemaps.Client(key='AIzaSyDSRumQMKR9GclqYS9AlfwlTRd1pUpcWRk')
+
+    if request.method == 'POST':
+        model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'rent_price.joblib')
+        rf = joblib.load(model_path)
+        address = request.POST['address']
+        rooms = request.POST['rooms']
+        baths = request.POST['baths']
+        typeofhouse = request.POST['typeofhouse']
+        geocode_result = gmaps.geocode(address)
+        
+        if geocode_result:
+            latitude = geocode_result[0]['geometry']['location']['lat']
+            longitude = geocode_result[0]['geometry']['location']['lng']
+    
+            for component in geocode_result[0]['address_components']:
+                if 'postal_code' in component['types']:
+                    zipcode = component['long_name']
+                    break
+            prediction=rf.predict(np.array([zipcode,latitude,longitude,typeofhouse,baths,rooms]).reshape(1, -1))
+            print(prediction)
+            print(f"Latitude: {latitude}, Longitude: {longitude}, ZIP Code: {zipcode}")
+            return render(request, 'rent_predict.html', {'prediction': prediction, })
+        else:
+            print("No results found.")
+        
+    return render(request, 'rent_predict.html')
 
 def student_discounts(request):
     return render(request, 'student_discounts.html')

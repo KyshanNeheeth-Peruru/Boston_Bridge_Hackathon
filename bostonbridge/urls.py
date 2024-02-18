@@ -30,6 +30,7 @@ urlpatterns = [
     path('add_rc/', bridge_views.add_rc, name='add_rc'),
     path('rental_check/', bridge_views.rental_check, name='rental_check'),
     path('nearby_events/', bridge_views.nearby_events, name='nearby_events'),
+    path('rent_predict/', bridge_views.rent_predict, name='rent_predict'),
     path('student_discounts/', bridge_views.student_discounts, name='student_discounts'),
     
 
