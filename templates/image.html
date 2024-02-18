@@ -1,34 +1,26 @@
 {% extends 'base.html' %}
-{% block title %}Login{% endblock %}
+{% block title %}Image Generator{% endblock %}
 {% block content %}
 
 <div class="container h-100">
     <div class="row h-100 justify-content-center align-items-center">
         <div class="card-body">
-            <h5 class="card-title text-center">Login</h5>
-
+            <h5 class="card-title text-center">Generate Image</h5>
             <hr>
-
 
             <form class="user" method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                  <input type="text" class="form-control form-control-user" id="image" name="image" placeholder="Enter text">
+                    <input type="text" class="form-control form-control-user" id="source" name="source" placeholder="Enter Source">
                 </div>
-
-                
+                <div class="form-group">
+                    <input type="text" class="form-control form-control-user" id="destination" name="destination" placeholder="Enter Destination">
+                </div>
                 <button class="btn btn-primary btn-user btn-block" type="submit">Submit</button>
             </form>
 
             <hr>
 
-
-
-
-
-            
-            
-            
         </div>
     </div>
 </div>
