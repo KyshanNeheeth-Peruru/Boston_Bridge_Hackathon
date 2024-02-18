@@ -13,6 +13,7 @@ from django.conf import settings
 import googlemaps
 import joblib
 import os
+from datetime import datetime
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 import numpy as np
@@ -197,6 +198,38 @@ def rent_predict(request):
         
     return render(request, 'rent_predict.html')
 
-def student_discounts(request):
-    return render(request, 'student_discounts.html')
+def commuter_crowd(request):
+    if request.method == 'POST':
+        model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'commuter_count.joblib')
+        model = joblib.load(model_path)
+        selectedoption = request.POST['line_route']
+        date_str = request.POST['date']
+        time_str = request.POST['time']
+        date_selected = datetime.strptime(date_str, '%Y-%m-%d').date()
+        time_selected = datetime.strptime(time_str, '%H:%M').time()
+        purplelineroutes={'year':0,'month':0,'day':0,'hour':0,'Middleborough/Lakeville':0,'Lowell':0,'Haverhill':0,'Kingston':0,'Needham':0,'Fitchburg':0,
+                          'Greenbush':0,'Fairmount':0,'Providence/Stoughton':0,'Newburyport/Rockport':0,'Framingham/Worcester':0,
+                          'Franklin/Foxboro':0}
+        lables = purplelineroutes.keys() - ['year','month','day','hour']
+        purplelineroutes[selectedoption] = 1
+        
+        purplelineroutes['year'] = date_selected.year
+        purplelineroutes['month'] = date_selected.month
+        purplelineroutes['day'] = date_selected.day
+        purplelineroutes['hour']=time_selected.hour
+        
+        print(purplelineroutes)
+        
+        df = pd.DataFrame(purplelineroutes,index=[0])
+        predicted = model.predict(df)
+        prediction = float(predicted[0])
+        if prediction > 4000:
+            pop_index="HIGH"
+        else:
+            pop_index="LOW"
+        return render(request, 'commuter_crowd.html', {'crowd_index': pop_index, 'selectedoption':selectedoption, 
+                                                'date_str':date_str, 'time_str':time_str})
+        
+        
+    return render(request, 'commuter_crowd.html')
 
