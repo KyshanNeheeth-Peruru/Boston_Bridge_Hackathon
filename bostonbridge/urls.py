@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', bridge_views.home, name='home'),
     path('login/', bridge_views.login, name='login'),
+    path('logout/', bridge_views.logout_view, name='logout'),
     path('register/', bridge_views.register, name='register'),
     path('forgot_password/', bridge_views.forgot_password, name='forgot_password'),
     path('faq/', bridge_views.faq, name='faq'),

@@ -1,4 +1,8 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import login, logout, get_user_model, authenticate
+from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -6,13 +10,49 @@ def home(request):
     return render(request, 'home.html')
 
 def login(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            messages.success(request, 'Logged In.')
+            return redirect('home')
+
+        else:
+            messages.error(request, "Username or password invalid")
+            return redirect('login')
     return render(request, 'login.html')
 
 def register(request):
+    if request.method == "POST":
+        username= request.POST['username']
+        firstname= request.POST['firstname']
+        lastname= request.POST['lastname']
+        email= request.POST['email']
+        pasw1= request.POST['pasw1']
+        pasw2= request.POST['pasw2']
+        user = User.objects.create_user(username,email,pasw1)
+        user.first_name = firstname
+        user.last_name = lastname
+        user.save()
+        messages.success(request, 'User created.')
+        return render(request, 'home.html')
     return render(request, 'register.html')
 
 def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        if User.objects.filter(email=email).exists():
+            messages.success(request, 'Password recovery email sent.')
+        else:
+            messages.error(request, 'No user found with this email.')
     return render(request, 'forgot_password.html')
+
+def logout_view(request):
+    logout(request)
+    messages.success(request,"Logged out")
+    return redirect('home')
 
 def faq(request):
     return render(request, 'faq.html')

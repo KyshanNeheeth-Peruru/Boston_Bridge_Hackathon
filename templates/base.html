@@ -30,7 +30,11 @@
                 {% comment %} <div class="sidebar-brand-icon">
                     <i class="fas fa-university"></i>
                 </div> {% endcomment %}
-                <div class="sidebar-brand-text mx-3">NAV</div>
+                <div class="sidebar-brand-text mx-3">
+                    <button href="/home/">
+                        Home
+                    </button>
+                </div>
             </a>
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
@@ -44,7 +48,7 @@
                 {% block links %}
 
 
-
+                {% if not user.is_authenticated %}
                     {% block login-link %}
                         <a class=" nav-item nav-link  border-bottom" href="/login/">
                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -54,7 +58,7 @@
                             Login
                         </a>
                     {% endblock %}
-                   {% block register-link %}
+                    {% block register-link %}
                        <a class="nav-item nav-link border-bottom" href="/register/">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
                         <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
@@ -72,7 +76,7 @@
                             Forgot Password
                         </a>
                     {% endblock %}
-
+                {% endif %}
                 {% block faq-link %}
                     <a class="nav-item nav-link border-bottom" href="/faq/">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
@@ -125,7 +129,7 @@
 
                 <a class=" nav-link text-muted"> Boston Bridge </a>
 
-                <a class=" nav-item nav-link" >
+                <a class=" nav-item nav-link" href="{% url 'logout' %}">
                     Logout
                 </a>
             {%else%}
@@ -135,6 +139,15 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div class="messages">
+                        {% for message in messages %}
+                          <p id="message_{{ forloop.counter }}" style="margin: 10px 0; padding: 5px; border-radius: 4px; font-size: 14px;
+                                                    {% if message.tags == 'success' %} color: green; background-color: #e9f7ef; border: 1px solid #1c7430; {% endif %}
+                                                    {% if message.tags == 'error' %} color: red; background-color: #f8e8e8; border: 1px solid #d32f2f; {% endif %}">
+                            {{ message }}
+                          </p>
+                        {% endfor %}
+                    </div>
                     {% block content %}
                     <!-- Dynamic Content goes here -->
                     {% endblock %}
@@ -145,6 +158,15 @@
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
+                {% comment %} <div class="messages">
+                    {% for message in messages %}
+                      <p style="margin: 10px 0; padding: 5px; border-radius: 4px; font-size: 14px;
+                                {% if message.tags == 'success' %} color: green; background-color: #e9f7ef; border: 1px solid #1c7430; {% endif %}
+                                {% if message.tags == 'error' %} color: red; background-color: #f8e8e8; border: 1px solid #d32f2f; {% endif %}">
+                        {{ message }}
+                      </p>
+                    {% endfor %}
+                </div> {% endcomment %}
                 <div class="container my-auto">
                     <div class="text-center my-auto">
                         <P style="width:100%; float:left;">Need help with anything? Please reach us at <a href = "mailto: kishan.nehith@gmail.com">kishan.nehith@gmail.com</a></P>
@@ -193,4 +215,17 @@
     <!-- Custom scripts for all pages -->
     <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 </body>
+<script>
+    // Hide messages after 5 seconds
+    window.onload = function() {
+        {% for message in messages %}
+            setTimeout(function() {
+                var msg = document.getElementById('message_{{ forloop.counter }}');
+                if (msg) {
+                    msg.style.display = 'none';
+                }
+            }, 3000);
+        {% endfor %}
+    };
+</script>
 </html>
