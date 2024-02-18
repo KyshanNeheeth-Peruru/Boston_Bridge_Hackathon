@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, get_user_model, authenticate
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
-from .models import Event, Violation
+from .models import Event, Violation, Discount
 import requests
 import csv
 from django import forms
@@ -76,6 +76,25 @@ def logout_view(request):
 class CSVUploadForm(forms.Form):
     file = forms.FileField()
 
+# def add_rc(request):
+#     if request.method == 'POST':
+#         form = CSVUploadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             csv_file = TextIOWrapper(request.FILES['file'].file, encoding='utf-8')
+#             reader = csv.DictReader(csv_file)
+#             for row in reader:
+#                 Violation.objects.create(
+#                     violation_type=row['violation_type'],
+#                     description=row['description'],
+#                     address=row['address'],
+#                 )
+#             messages.success(request, "CSV file has been successfully uploaded and processed.")
+#             return redirect('add_rc')
+#     else:
+#         form = CSVUploadForm()
+    
+#     return render(request, 'add_rc.html', {'form': form})
+
 def add_rc(request):
     if request.method == 'POST':
         form = CSVUploadForm(request.POST, request.FILES)
@@ -83,10 +102,9 @@ def add_rc(request):
             csv_file = TextIOWrapper(request.FILES['file'].file, encoding='utf-8')
             reader = csv.DictReader(csv_file)
             for row in reader:
-                Violation.objects.create(
-                    violation_type=row['violation_type'],
+                Discount.objects.create(
+                    title=row['title'],
                     description=row['description'],
-                    address=row['address'],
                 )
             messages.success(request, "CSV file has been successfully uploaded and processed.")
             return redirect('add_rc')
@@ -273,5 +291,13 @@ def lyft_uber(request):
         return render(request, 'lyft_uber.html', {'uber': uber, 'lyft': lyft, 'prediction': prediction})
     
     return render(request, 'lyft_uber.html')
+
+def student_discount(request):
+    discount = []
+    if request.method == 'POST':
+        title = request.POST.get('title', '') 
+        discount = Discount.objects.filter(title__icontains=title)
+    return render(request, 'student_discount.html', {'discounts': discount})
+
     
 

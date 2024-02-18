@@ -33,6 +33,7 @@ urlpatterns = [
     path('rent_predict/', bridge_views.rent_predict, name='rent_predict'),
     path('lyft_uber/', bridge_views.lyft_uber, name='lyft_uber'),
     path('commuter_crowd/', bridge_views.commuter_crowd, name='commuter_crowd'),
+    path('student_discount/', bridge_views.student_discount, name='student_discount'),
     
     
 
