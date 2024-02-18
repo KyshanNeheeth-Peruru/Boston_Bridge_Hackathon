@@ -1,38 +1,21 @@
 {% extends 'base.html' %}
-{% block title %}Navigaion{% endblock %}
+
 {% block content %}
-
-<div class="container h-100">
-    <div class="row h-100 justify-content-center align-items-center">
-        <div class="card-body">
-            <h5 class="card-title text-center">Navigation</h5>
-            <hr>
-
-            <form class="user" method="post">
-                <div class="container">
-                    <h2>Upload CSV File</h2>
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="file" name="csv_file">
-                        <button type="submit">Upload</button>
-                    </form>
-                </div>
-            </form>
-
-            <hr>
-
-        </div>
-    </div>
+<div class="container">
+    <h2>Upload CSV File</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+    </form>
 </div>
 
-<style>
-    .error-message {
-        color: red;
-        background-color: #ffe6e6;
-        padding: 10px;
-        border: 1px solid #ff9999;
-        border-radius: 4px;
-    }
-</style>
+{% if messages %}
+<div class="container">
+    {% for message in messages %}
+    <div>{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
 
 {% endblock %}

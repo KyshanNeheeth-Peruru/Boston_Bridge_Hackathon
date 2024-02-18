@@ -3,8 +3,12 @@ from django.contrib import messages
 from django.contrib.auth import login, logout, get_user_model, authenticate
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
-from .models import Event
+from .models import Event, Violation
 import requests
+import csv
+from django import forms
+from io import TextIOWrapper
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -57,11 +61,27 @@ def logout_view(request):
     messages.success(request,"Logged out")
     return redirect('home')
 
-def faq(request):
-    return render(request, 'faq.html')
+class CSVUploadForm(forms.Form):
+    file = forms.FileField()
 
 def add_rc(request):
-    return render(request, 'add_rc.html')
+    if request.method == 'POST':
+        form = CSVUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = TextIOWrapper(request.FILES['file'].file, encoding='utf-8')
+            reader = csv.DictReader(csv_file)
+            for row in reader:
+                Violation.objects.create(
+                    violation_type=row['violation_type'],
+                    description=row['description'],
+                    address=row['address'],
+                )
+            messages.success(request, "CSV file has been successfully uploaded and processed.")
+            return redirect('add_rc')
+    else:
+        form = CSVUploadForm()
+    
+    return render(request, 'add_rc.html', {'form': form})
 
 
 def navigation(request):
@@ -92,44 +112,52 @@ def navigation(request):
         
     return render(request, 'navigation.html')
 
-def urban_commuter(request):
-    return render(request, 'urban_commuter.html')
+def rental_check(request):
+    violations = []
+    if request.method == 'POST':
+        address = request.POST.get('address', '') 
+        violations = Violation.objects.filter(address__icontains=address)
+    return render(request, 'rental_check.html', {'violations': violations})
 
-def local_community_engagement(request):
-    return render(request, 'local_community_engagement.html')
+def nearby_events(request):
+    places = []  # Initialize places as an empty list
+    if request.method == 'POST':
+        api_key = 'AIzaSyDSRumQMKR9GclqYS9AlfwlTRd1pUpcWRk'
+        keyword = request.POST.get('activity', '')
+        address = request.POST.get('address', '')
+        location = geocode_address(api_key, address)
+        radius = "5000"
+        places = find_places_nearby(api_key, location, radius, keyword=keyword)
+        return render(request, 'nearby_events.html', {'places': places, 'address':address})
+    return render(request, 'nearby_events.html', {'places': places})
 
-def student_housing(request):
-    return render(request, 'student_housing.html')
+def geocode_address(api_key, address):
+    base_url = "https://maps.googleapis.com/maps/api/geocode/json"
+    params = {
+        "key": api_key,
+        "address": address
+    }
+    response = requests.get(base_url, params=params)
+    result = response.json()["results"][0]
+    location = result["geometry"]["location"]
+    return f"{location['lat']},{location['lng']}"
 
-def job_finder(request):
-    return render(request, 'job_finder.html')
+def find_places_nearby(api_key, location, radius, keyword=None, type=None):
+    base_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+    params = {
+        "key": api_key,
+        "location": location,
+        "radius": radius
+    }
+    if keyword:
+        params["keyword"] = keyword
+    if type:
+        params["type"] = type
 
-def event_planning_tools(request):
-    return render(request, 'event_planning_tools.html')
-
-def campus_to_city_transition(request):
-    return render(request, 'campus_to_city_transition.html')
+    response = requests.get(base_url, params=params)
+    results = response.json()["results"]
+    return results
 
 def student_discounts(request):
     return render(request, 'student_discounts.html')
 
-def emergency_response(request):
-    return render(request, 'emergency_response.html')
-
-def networking(request):
-    return render(request, 'networking.html')
-
-def culture_exchange_platforms(request):
-    return render(request, 'culture_exchange_platforms.html')
-
-def health_portal(request):
-    return render(request, 'health_portal.html')
-
-def green_campus(request):
-    return render(request, 'green_campus.html')
-
-def educational_partnerships(request):
-    return render(request, 'educational_partnerships.html')
-
-def ciy_exploration(request):
-    return render(request, 'ciy_exploration.html')
