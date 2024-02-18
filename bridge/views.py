@@ -20,6 +20,7 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelEncoder
 
 # Create your views here.
 
@@ -230,6 +231,47 @@ def commuter_crowd(request):
         return render(request, 'commuter_crowd.html', {'crowd_index': pop_index, 'selectedoption':selectedoption, 
                                                 'date_str':date_str, 'time_str':time_str})
         
-        
     return render(request, 'commuter_crowd.html')
+
+def lyft_uber(request):
+    if request.method == 'POST':
+        model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'ride_price.joblib')
+        model_2 = joblib.load(model_path)
+        response = {'hour':0,'day':0,'month':0,'source':'','destination':'','cab_type':[]}
+        df_response = response
+        input_source=request.POST['source']
+        input_destination=request.POST['destination']
+        response['destination']=input_destination
+        response['source']=input_source
+        date_str = request.POST['date']
+        time_str = request.POST['time']
+        date_1 = datetime.strptime(date_str, '%Y-%m-%d').date()
+        time_2 = datetime.strptime(time_str, '%H:%M').time()
+        response['month'] = date_1.month
+        response['day'] = date_1.day
+        response['hour']=time_2.hour
+        response['cab_type']=['Lyft','Uber']
+        df_response['month'] = date_1.month
+        df_response['day'] = date_1.day
+        df_response['hour']=time_2.hour
+        df_response['cab_type']=['Lyft','Uber']
+        df_response['source']=input_source
+        df_response['destination']=input_destination
+        dataframe_df=pd.DataFrame(df_response)
+        enc1=LabelEncoder()
+        enc1.classes_=np.load('Testing/class_source.npy',allow_pickle=True)
+        enc2=LabelEncoder()
+        enc2.classes_=np.load('Testing/class_destination.npy',allow_pickle=True)
+        enc3=LabelEncoder()
+        enc3.classes_=np.load('Testing/class_cab.npy',allow_pickle=True)
+        dataframe_df['source']=enc1.transform(dataframe_df['source'])
+        dataframe_df['destination']=enc2.transform(dataframe_df['destination'])
+        dataframe_df['cab_type']=enc3.transform(dataframe_df['cab_type'])
+        prediction  = model_2.predict(dataframe_df)
+        lyft = prediction[0]
+        uber = prediction[1]
+        return render(request, 'lyft_uber.html', {'uber': uber, 'lyft': lyft, 'prediction': prediction})
+    
+    return render(request, 'lyft_uber.html')
+    
 

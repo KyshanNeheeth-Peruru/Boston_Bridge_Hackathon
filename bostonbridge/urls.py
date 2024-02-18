@@ -31,7 +31,7 @@ urlpatterns = [
     path('rental_check/', bridge_views.rental_check, name='rental_check'),
     path('nearby_events/', bridge_views.nearby_events, name='nearby_events'),
     path('rent_predict/', bridge_views.rent_predict, name='rent_predict'),
-    # path('student_discounts/', bridge_views.student_discounts, name='student_discounts'),
+    path('lyft_uber/', bridge_views.lyft_uber, name='lyft_uber'),
     path('commuter_crowd/', bridge_views.commuter_crowd, name='commuter_crowd'),
     
     
