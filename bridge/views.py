@@ -4,6 +4,7 @@ from django.contrib.auth import login, logout, get_user_model, authenticate
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth.models import User
 from .models import Event
+import requests
 
 # Create your views here.
 
@@ -59,7 +60,36 @@ def logout_view(request):
 def faq(request):
     return render(request, 'faq.html')
 
+def add_rc(request):
+    return render(request, 'add_rc.html')
+
+
 def navigation(request):
+    if request.method == 'POST':
+        source = request.POST['source']
+        destination = request.POST['destination']
+        mode = request.POST['mode']
+        api_key = 'AIzaSyDSRumQMKR9GclqYS9AlfwlTRd1pUpcWRk'
+        base_url = "https://maps.googleapis.com/maps/api/directions/json"
+        params = {
+            "key": api_key,
+            "origin": source,
+            "destination": destination,
+            "mode": mode
+        }
+        response = requests.get(base_url, params=params)
+        directions = response.json()
+        route = directions["routes"][0]
+        legs = route["legs"][0]
+        duration = legs["duration"]["text"]
+        distance = legs["distance"]["text"]
+        steps = legs["steps"]
+
+        print(duration)
+        print(distance)
+
+        return render(request, 'navigation.html', {'route': route, 'distance': distance,'duration': duration, 'steps': steps})
+        
     return render(request, 'navigation.html')
 
 def urban_commuter(request):

@@ -29,6 +29,8 @@ urlpatterns = [
     path('faq/', bridge_views.faq, name='faq'),
     
     path('navigation/', bridge_views.navigation, name='navigation'),
+    path('add_rc/', bridge_views.add_rc, name='add_rc'),
+    
     
     path('urban_commuter/', bridge_views.urban_commuter, name='urban_commuter'),
     path('local_community_engagement/', bridge_views.local_community_engagement, name='local_community_engagement'),
