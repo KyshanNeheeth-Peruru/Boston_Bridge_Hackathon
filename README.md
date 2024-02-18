@@ -32,7 +32,7 @@
 
 ## Link to model file
 #### ride_price.joblib file
-	https://drive.google.com/file/d/1b8uqCFw_Kc2bBQD2eOOQaTcU5TQjAUSb/view?usp=drive_link
+	https://drive.google.com/file/d/1ZncxYIiIAJCoDwhDLOUx4CcFgeBnSoUw/view?usp=sharing
 
 
 ## Usage Instructions
