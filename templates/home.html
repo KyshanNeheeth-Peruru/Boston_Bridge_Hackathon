@@ -1,11 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bridge</title>
-</head>
-<body>
-    <p> Test</p>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="card-body">
+            <h5 class="card-title text-center">Login</h5>
+            {% for msg in messages %}
+                <p id="message" class="error-message">{{ msg }}</p>
+            {% endfor %}
+            
+            <hr>
+            
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    // Display the message for 5 seconds and then hide it
+    setTimeout(function() {
+        var message = document.getElementById('message');
+        if (message) {
+            message.style.display = 'none';
+        }
+    }, 5000);
+</script>
+<style>
+    .error-message {
+        color: red;
+        background-color: #ffe6e6;
+        padding: 10px;
+        border: 1px solid #ff9999;
+        border-radius: 4px;
+    }
+</style>
+
+{% endblock %}
