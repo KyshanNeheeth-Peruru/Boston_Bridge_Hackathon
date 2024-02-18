@@ -27,6 +27,8 @@ urlpatterns = [
     path('forgot_password/', bridge_views.forgot_password, name='forgot_password'),
     path('faq/', bridge_views.faq, name='faq'),
     
+    path('image/', bridge_views.image, name='image'),
+    
     path('urban_commuter/', bridge_views.urban_commuter, name='urban_commuter'),
     path('city_Navigation/', bridge_views.city_Navigation, name='city_Navigation'),
     path('local_community_engagement/', bridge_views.local_community_engagement, name='local_community_engagement'),

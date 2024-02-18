@@ -57,6 +57,9 @@ def logout_view(request):
 def faq(request):
     return render(request, 'faq.html')
 
+def image(request):
+    return render(request, 'image.html')
+
 def urban_commuter(request):
     return render(request, 'urban_commuter.html')
 

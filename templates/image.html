@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+
+<div class="container h-100">
+    <div class="row h-100 justify-content-center align-items-center">
+        <div class="card-body">
+            <h5 class="card-title text-center">Login</h5>
+
+            <hr>
+
+
+            <form class="user" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                  <input type="text" class="form-control form-control-user" id="image" name="image" placeholder="Enter text">
+                </div>
+
+                
+                <button class="btn btn-primary btn-user btn-block" type="submit">Submit</button>
+            </form>
+
+            <hr>
+
+
+
+
+
+            
+            
+            
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-message {
+        color: red;
+        background-color: #ffe6e6;
+        padding: 10px;
+        border: 1px solid #ff9999;
+        border-radius: 4px;
+    }
+</style>
+
+{% endblock %}
