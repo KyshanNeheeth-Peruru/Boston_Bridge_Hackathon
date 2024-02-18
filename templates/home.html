@@ -7,17 +7,21 @@
         <div class="col-12">
             <h5 class="text-center">Events</h5>
             <hr>
-            {% for event in events %}
-            <div class="card mb-3" style="cursor: pointer;">
-                <div class="card-header" onclick="toggleAdditionalInfo('info{{ forloop.counter }}')">
-                    {{ event.name }} - {{ event.date }} at {{ event.time }}
+            {% if events %}
+                {% for event in events %}
+                <div class="card mb-3" style="cursor: pointer;">
+                    <div class="card-header" onclick="toggleAdditionalInfo('info{{ forloop.counter }}')">
+                        {{ event.name }} - {{ event.date }} at {{ event.time }}
+                    </div>
+                    <div class="card-body" id="info{{ forloop.counter }}" style="display: none;">
+                        <h5 class="card-title">{{ event.location }}</h5>
+                        <p class="card-text">{{ event.additional_info }}</p>
+                    </div>
                 </div>
-                <div class="card-body" id="info{{ forloop.counter }}" style="display: none;">
-                    <h5 class="card-title">{{ event.location }}</h5>
-                    <p class="card-text">{{ event.additional_info }}</p>
-                </div>
-            </div>
-            {% endfor %}
+                {% endfor %}
+            {% else %}
+                <div class="text-center">No events right now.</div>
+            {% endif %}
         </div>
     </div>
 </div>
