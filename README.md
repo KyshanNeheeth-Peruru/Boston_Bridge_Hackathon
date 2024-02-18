@@ -36,11 +36,14 @@
 
 
 ## Usage Instructions
-- Admin can enter events into database and display these events in the home page.
 - An admin can enter events into the database and display these events on the home page.
 - Users can enter any address and check the violations that have occurred in the house.
 - Users can enter a source, destination, and select a type of transit to get distance, duration, and steps to follow in order to reach the destination.
 - Users can enter an activity and their current address to find out where they can go to engage in that activity.
 - Users can enter any address, number of rooms, number of baths, and choose the type of house to predict the rent of the house.
-- Users can select an area, enter a date and time to predict the crowd that may travel during the commute.
+- Users can select an area, enter a date and time to predict the crowd that may travel during that commute.
 - Users can view the student discounts provided by a particular brand in Boston by entering the name of the brand.
+
+## Screenshots
+
+![alt text](image.png)
