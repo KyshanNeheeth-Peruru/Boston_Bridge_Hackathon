@@ -31,6 +31,7 @@
 
 
 ## Link to model file
+This file should be placed in ml_models directory.
 #### ride_price.joblib file
 	https://drive.google.com/file/d/1ZncxYIiIAJCoDwhDLOUx4CcFgeBnSoUw/view?usp=sharing
 
